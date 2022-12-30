@@ -1,19 +1,22 @@
-const http = require('http')
+const express = require('express')
+const app = express()
+const port = 3000
 
-const server = http.createServer((request, response) => {
-    const data = {
-        id: '1',
-        title: '关山月',
-        content: '明月出天山，苍茫云海间'
-    }
-    const jsonData = JSON.stringify(data)
-    response.writeHead(200, {
-        "Content-Type": 'application/json; charset=utf-8'
-    })
-    response.write(jsonData)
-    response.end()
+app.listen(port, () => {
+    console.log('服务已启动！');
 })
 
-server.listen(3000, () => {
-    console.log("服务已启动！");
+app.get('/', (request, response) => {
+    response.send('你好！')
+})
+
+const data = [{ id: '1', title: '测试标题', content: '测试内容' }, { id: '2', title: '测试标题', content: '测试内容' }, ]
+app.get('/posts', (request, response) => {
+    response.send(data)
+})
+
+app.get('/posts/:postId', (request, response) => {
+    const { postId } = request.params
+    const posts = data.filter(item => item.id == postId)
+    response.send(posts[0])
 })
